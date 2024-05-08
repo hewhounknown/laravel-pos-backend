@@ -21,5 +21,8 @@ use App\Http\Controllers\CategoryController;
 // });
 
 Route::post('category/create', [CategoryController::class, 'createCategory']);
+Route::get('category/find/{id}', [CategoryController::class, 'findCategory']);
+Route::get('category/get', [CategoryController::class, 'getCategories']);
+Route::put('category/update/{id}', [CategoryController::class, 'updateCategory']);
+Route::delete('category/delete/{id}', [CategoryController::class, 'deleteCategory']);
 
-Route::post('/product/create', [ProductController::class, 'store']);
