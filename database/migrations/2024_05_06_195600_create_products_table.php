@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('product_code')->unique();
             $table->string('product_name');
-            $table->decimal('price', 5, 2);
+            $table->decimal('price', 8, 2);
             $table->integer('quantity')->default(0);
             $table->foreignId('category_id')->constrained();
             $table->timestamps();
