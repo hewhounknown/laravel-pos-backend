@@ -2,31 +2,37 @@
 
 namespace App\Http\Controllers;
 
+use App\DTO\CategoryDTO;
 use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Services\CategoryService;
 
 class CategoryController extends Controller
 {
-    //
+    private $categoryService;
+
+    public function __construct(CategoryService $catService)
+    {
+        $this->categoryService = $catService;
+    }
+
     public function store(Request $req)
     {
         $isExist = $this->findName($req->categoryName);
         if($isExist == true) return "already exist ";
 
-        $categoryCode = $this->generateCode($req->categoryName);
+        //$categoryCode = $this->generateCode($req->categoryName);
 
-        $category = Category::create([
-            'category_code' => $categoryCode,
-            'category_name' => $req->categoryName
-        ]);
+        $dto = new CategoryDTO($req->categoryName);
+        $category = $this->categoryService->create($dto);
 
         return $category;
     }
 
     public function show($id)
     {
-        $category = Category::where('id', $id)->first();
+        $category = $this->categoryService->getById($id);
         if($category == null){
             return "no data found";
         }
@@ -35,7 +41,7 @@ class CategoryController extends Controller
 
     public function index()
     {
-        $categories = Category::all();
+        $categories = $this->categoryService->getAll();
         return $categories;
     }
 
@@ -47,12 +53,9 @@ class CategoryController extends Controller
         //$isExist = $this->findName($req->categoryName);
         //if($isExist == false) return "already exists";
 
-        $categoryCode = $this->generateCode($req->categoryName);
-
-        $result = Category::where('id', $id)->update([
-            'category_code' => $categoryCode,
-            'category_name' => $req->categoryName
-        ]);
+        //$categoryCode = $this->generateCode($req->categoryName);
+        $dto = new CategoryDTO($req->categoryName);
+        $result = $this->categoryService->update($id, $dto);
 
         $msg = $result > 0 ? "updated success" : "failed";
         return $msg;
@@ -63,18 +66,10 @@ class CategoryController extends Controller
         $category = $this->show($id);
         if($category == null) return "no data to delete";
 
-        $result = Category::where('id', $id)->delete();
+        $result = $this->categoryService->delete($id);
 
         $msg = $result > 0 ? "deleted success" : "failed";
         return $msg;
-    }
-
-    private function generateCode($name)
-    {
-        $prefix = Str::upper(Str::substr($name, 0, 3));
-        $code = $prefix . mt_rand(1000, 9999);
-
-        return $code;
     }
 
     private function findName($name)
