@@ -17,10 +17,7 @@ class CategoryService
 
     public function create(CategoryDTO $catDTO)
     {
-        $data = [
-            'category_code' => $catDTO->categoryCode,
-            'category_name' => $catDTO->categoryName
-        ];
+        $data = $this->toArr($catDTO);
         $category = $this->categoryRepo->create($data);
         return $category;
     }
@@ -39,10 +36,7 @@ class CategoryService
 
     public function update($id, CategoryDTO $catDTO)
     {
-        $data = [
-            'category_code' => $catDTO->categoryCode,
-            'category_name' => $catDTO->categoryName
-        ];
+        $data = $this->toArr($catDTO);
         $category = $this->categoryRepo->update($id, $data);
         return $category;
     }
@@ -51,5 +45,14 @@ class CategoryService
     {
        $cat = $this->categoryRepo->delete($id);
        return $cat;
+    }
+
+    private function toArr(CategoryDTO $catDTO)
+    {
+        $arr = [
+            'category_code' => $catDTO->categoryCode,
+            'category_name' => $catDTO->categoryName
+        ];
+        return $arr;
     }
 }

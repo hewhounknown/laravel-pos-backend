@@ -2,41 +2,38 @@
 
 namespace App\Http\Controllers;
 
+use App\DTO\ProductDTO;
 use App\Models\Product;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Services\ProductService;
 
 class ProductController extends Controller
 {
+    protected $productService;
+
+    public function __construct(ProductService $productService)
+    {
+        $this->productService = $productService;
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $products = Product::all();
-        return $products;
+        $products = $this->productService->getAll();
+        return response()->json($products);
     }
-
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $req)
     {
-        $isExist = $this->findName($req->productName);
-        if($isExist == true) return "already exist";
-
-        $productCode = $this->generateCode($req->productName);
-
-        $product = Product::create([
-            'product_code' => $productCode,
-            'product_name' => $req->productName,
-            'price' => $req->productPrice,
-            'quantity' => $req->productQuantity,
-            'category_id' => $req->categoryId
-        ]);
-
-        return $product;
+        $dto = new ProductDTO($req->productName, $req->price, $req->quantity, $req->categoryId);
+        $product = $this->productService->create($dto);
+        return response()->json($product);
     }
 
     /**
@@ -44,8 +41,8 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        $product = Product::find($id);
-        return $product;
+        $product = $this->productService->getById($id);
+        return response()->json($product);
     }
 
     /**
@@ -53,24 +50,9 @@ class ProductController extends Controller
      */
     public function update($id, Request $req)
     {
-        $product = $this->show($id);
-        if($product == null) return "no data to update";
-
-        //$isExist = $this->findName($req->productName);
-        //if($isExist == true) return "already exist";
-
-        $productCode = $this->generateCode($req->productName);
-
-        $result = Product::where('id', $id)->update([
-            "product_code" => $productCode,
-            "product_name" => $req->productName,
-            "price" => $req->productPrice,
-            "quantity" => $req->productQuantity,
-            "category_id" => $req->categoryId
-        ]);
-
-        $msg = $result > 0 ? "updated success" : "failed";
-        return $msg;
+        $dto = new ProductDTO($req->productName, $req->price, $req->quantity, $req->categoryId);
+        $product = $this->productService->update($id, $dto);
+        return response()->json($product);
     }
 
     /**
@@ -78,29 +60,7 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        $product = $this->show($id);
-        if($product == null) return "no data to delete";
-
-        $result = $product->delete();
-
-        $msg = $result > 0 ? "deleted success" : "failed";
-        return $msg;
-    }
-
-    private function generateCode($name)
-    {
-        $prefix = Str::upper(Str::substr($name, 0, 3));
-        $code = $prefix . mt_rand(1000, 9999);
-
-        return $code;
-    }
-
-    private function findName($name)
-    {
-        $product = Product::where('product_name', $name)->first();
-        if($product == null){
-            return false;
-        }
-        return true;
+        $product = $this->productService->delete($id);
+        return response()->json($product);
     }
 }

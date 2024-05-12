@@ -10,7 +10,7 @@ use App\Services\CategoryService;
 
 class CategoryController extends Controller
 {
-    private $categoryService;
+    protected $categoryService;
 
     public function __construct(CategoryService $catService)
     {
