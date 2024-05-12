@@ -30,4 +30,9 @@ class CategoryRepository
     {
         return Category::where('id', $id)->delete();
     }
+
+    public function findName($name)
+    {
+        return Category::where('category_name', $name)->first();
+    }
 }

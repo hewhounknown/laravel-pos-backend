@@ -17,8 +17,12 @@ class CategoryService
 
     public function create(CategoryDTO $catDTO)
     {
+        $isExist = $this->categoryRepo->findName($catDTO->categoryName);
+        if($isExist != null) return "already exist";
+
         $data = $this->toArr($catDTO);
         $category = $this->categoryRepo->create($data);
+
         return $category;
     }
 
@@ -36,6 +40,13 @@ class CategoryService
 
     public function update($id, CategoryDTO $catDTO)
     {
+        $isExist = $this->categoryRepo->getById($id);
+        if($isExist == null) return 0;
+
+        if($isExist->category_name == $catDTO->categoryName){
+            $catDTO->categoryCode = $isExist->category_code;
+        }
+
         $data = $this->toArr($catDTO);
         $category = $this->categoryRepo->update($id, $data);
         return $category;
@@ -43,8 +54,11 @@ class CategoryService
 
     public function delete($id)
     {
-       $cat = $this->categoryRepo->delete($id);
-       return $cat;
+        $isExist = $this->categoryRepo->getById($id);
+        if($isExist == null) return 0;
+
+        $category = $this->categoryRepo->delete($id);
+        return $category;
     }
 
     private function toArr(CategoryDTO $catDTO)

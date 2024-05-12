@@ -58,6 +58,7 @@ class ProductService
         if($isExist == null) return "no data to delete";
 
         $product = $this->productRepo->delete($id);
+        return $product;
     }
 
     private function toArr(ProductDTO $dto)

@@ -11,7 +11,7 @@ class CategoryDTO
 
     public function __construct(string $categoryName){
         $this->categoryCode = $this->generateCode($categoryName);
-        $this->categoryName = $categoryName;
+        $this->categoryName = Str::lower($categoryName);
     }
 
     private function generateCode($name) : string

@@ -19,65 +19,52 @@ class CategoryController extends Controller
 
     public function store(Request $req)
     {
-        $isExist = $this->findName($req->categoryName);
-        if($isExist == true) return "already exist ";
-
-        //$categoryCode = $this->generateCode($req->categoryName);
-
         $dto = new CategoryDTO($req->categoryName);
         $category = $this->categoryService->create($dto);
 
-        return $category;
+        return response()->json($category);
     }
 
     public function show($id)
     {
         $category = $this->categoryService->getById($id);
-        if($category == null){
-            return "no data found";
-        }
-        return $category;
+        return response()->json($category);
     }
 
     public function index()
     {
         $categories = $this->categoryService->getAll();
-        return $categories;
+        return response()->json($categories);;
     }
 
     public function update($id, Request $req)
     {
-        $category = $this->show($id);
-        if($category == null) return "no data to update";
-
-        //$isExist = $this->findName($req->categoryName);
-        //if($isExist == false) return "already exists";
-
-        //$categoryCode = $this->generateCode($req->categoryName);
         $dto = new CategoryDTO($req->categoryName);
-        $result = $this->categoryService->update($id, $dto);
+        $category = $this->categoryService->update($id, $dto);
 
-        $msg = $result > 0 ? "updated success" : "failed";
-        return $msg;
+        return $this->response($category, "updated");
+
     }
 
     public function destroy($id)
     {
-        $category = $this->show($id);
-        if($category == null) return "no data to delete";
-
-        $result = $this->categoryService->delete($id);
-
-        $msg = $result > 0 ? "deleted success" : "failed";
-        return $msg;
+        $category = $this->categoryService->delete($id);
+        return $this->response($category, "deleted");
     }
 
-    private function findName($name)
+    private function response($condition, $action)
     {
-        $category = Category::where('category_name', $name)->first();
-        if($category == null){
-            return false;
+        if($condition == true){
+            return response()->json([
+                'status' => true,
+                'message' => $action . ' success'
+            ], 200);
+        } else{
+            return response()->json([
+                'status' => false,
+                'message' => 'no data found'
+            ], 404);
         }
-        return true;
     }
+
 }
