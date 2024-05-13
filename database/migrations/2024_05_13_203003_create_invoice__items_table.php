@@ -11,10 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('categories', function (Blueprint $table) {
+        Schema::create('invoice__items', function (Blueprint $table) {
             $table->id();
-            $table->string('category_code')->unique();
-            $table->string('category_name');
+            $table->foreignId('invoice_id')->constrained();
+            $table->foreignId('product_id')->constrained();
+            $table->integer('quantity');
+            $table->decimal('unit_price', 8 , 2);
+            $table->decimal('total_price', 10 , 2);
             $table->timestamps();
         });
     }
@@ -24,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('categories');
+        Schema::dropIfExists('invoice__items');
     }
 };
