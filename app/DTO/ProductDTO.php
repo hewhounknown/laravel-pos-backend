@@ -12,13 +12,13 @@ class ProductDTO
     public int $quantity;
     public int $categoryId;
 
-    public function __construct(string $name, float $price, int $quantity, int $catId)
+    public function __construct($req)
     {
-        $this->productCode = $this->generateCode($name);
-        $this->productName = Str::lower($name) ;
-        $this->price = $price;
-        $this->quantity = $quantity;
-        $this->categoryId = $catId;
+        $this->productCode = $this->generateCode($req->productName);
+        $this->productName = Str::lower($req->productName) ;
+        $this->price = $req->price;
+        $this->quantity = $req->quantity;
+        $this->categoryId = $req->categoryId;
     }
 
     private function generateCode($name) : string

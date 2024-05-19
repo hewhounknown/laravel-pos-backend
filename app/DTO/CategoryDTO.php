@@ -9,9 +9,10 @@ class CategoryDTO
     public string $categoryCode;
     public string $categoryName;
 
-    public function __construct(string $categoryName){
-        $this->categoryCode = $this->generateCode($categoryName);
-        $this->categoryName = Str::lower($categoryName);
+    public function __construct($reqArr)
+    {
+        $this->categoryCode = $this->generateCode($reqArr->categoryName);
+        $this->categoryName = Str::lower($reqArr->categoryName);
     }
 
     private function generateCode($name) : string

@@ -31,7 +31,7 @@ class ProductController extends Controller
      */
     public function store(Request $req)
     {
-        $dto = new ProductDTO($req->productName, $req->price, $req->quantity, $req->categoryId);
+        $dto = new ProductDTO($req);
         $product = $this->productService->create($dto);
         return response()->json($product);
     }
@@ -50,7 +50,7 @@ class ProductController extends Controller
      */
     public function update($id, Request $req)
     {
-        $dto = new ProductDTO($req->productName, $req->price, $req->quantity, $req->categoryId);
+        $dto = new ProductDTO($req);
         $product = $this->productService->update($id, $dto);
         return response()->json($product);
     }

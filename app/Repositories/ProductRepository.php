@@ -13,7 +13,10 @@ class ProductRepository
 
     public function getById($id)
     {
-        return Product::find($id);
+        return Product::join('categories', 'categories.id', '=', 'products.category_id')
+                        ->where('products.id', $id)
+                        ->select('products.*', 'categories.category_code')
+                        ->get();
     }
 
     public function create(array $data)

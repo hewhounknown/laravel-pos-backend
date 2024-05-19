@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\DTO\CategoryDTO;
 use App\Models\Category;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Services\CategoryService;
 
@@ -19,7 +18,7 @@ class CategoryController extends Controller
 
     public function store(Request $req)
     {
-        $dto = new CategoryDTO($req->categoryName);
+        $dto = new CategoryDTO($req);
         $category = $this->categoryService->create($dto);
 
         return response()->json($category);
@@ -39,7 +38,7 @@ class CategoryController extends Controller
 
     public function update($id, Request $req)
     {
-        $dto = new CategoryDTO($req->categoryName);
+        $dto = new CategoryDTO($req);
         $category = $this->categoryService->update($id, $dto);
 
         return $this->response($category, "updated");
