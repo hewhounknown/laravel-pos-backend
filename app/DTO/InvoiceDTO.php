@@ -22,28 +22,30 @@ class InvoiceDTO
         $this->subTotal = 0.00;
         $this->tax = 8.00;
         $this->discount = 0.00;
-        $this->totalAmount  = $this->total();
+       // $this->total();
         $this->paymentMethod = $req->payment;
         $this->received = $req->received;
-        $this->refund =$this->refund($req->received);
+        //$this->refund($req->received);
         $this->cashierId = $req->cashierId;
     }
 
+    //for sum of the totalPrice from InvoiceItemDTO
     public function subTotal($price)
     {
         $this->subTotal += $price;
+        $this->total();
+        $this->refund($this->received);
     }
 
     private function total()
     {
-        $tmp = ($this->subTotal + $this->tax) - $this->discount;
-        return $tmp;
+        $this->totalAmount = ($this->subTotal + $this->tax) - $this->discount;
+
     }
 
     private function refund($receive)
     {
-        $tmp = $this->totalAmount - $receive;
-        return $tmp;
+        $this->refund = $this->totalAmount - $receive;
     }
 
 
