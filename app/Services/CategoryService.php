@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\DTO\CategoryDTO;
-use App\Models\Category;
 use App\Repositories\CategoryRepository;
 
 class CategoryService
