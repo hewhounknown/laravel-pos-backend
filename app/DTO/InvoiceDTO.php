@@ -40,7 +40,6 @@ class InvoiceDTO
     private function total()
     {
         $this->totalAmount = ($this->subTotal + $this->tax) - $this->discount;
-
     }
 
     private function refund($receive)

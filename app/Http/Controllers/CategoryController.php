@@ -11,9 +11,9 @@ class CategoryController extends Controller
 {
     protected $categoryService;
 
-    public function __construct(CategoryService $catService)
+    public function __construct(CategoryService $service)
     {
-        $this->categoryService = $catService;
+        $this->categoryService = $service;
     }
 
     public function store(Request $req)

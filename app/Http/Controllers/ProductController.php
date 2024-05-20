@@ -12,9 +12,9 @@ class ProductController extends Controller
 {
     protected $productService;
 
-    public function __construct(ProductService $productService)
+    public function __construct(ProductService $service)
     {
-        $this->productService = $productService;
+        $this->productService = $service;
     }
 
     /**
@@ -52,7 +52,7 @@ class ProductController extends Controller
     {
         $dto = new ProductDTO($req);
         $product = $this->productService->update($id, $dto);
-        return response()->json($product);
+        return $this->response($product, "updated");
     }
 
     /**
@@ -61,6 +61,21 @@ class ProductController extends Controller
     public function destroy($id)
     {
         $product = $this->productService->delete($id);
-        return response()->json($product);
+        return $this->response($product, "deleted");
+    }
+
+    private function response($condition, $action)
+    {
+        if($condition == true){
+            return response()->json([
+                'status' => true,
+                'message' => $action . ' success'
+            ], 200);
+        } else{
+            return response()->json([
+                'status' => false,
+                'message' => 'no data found'
+            ], 404);
+        }
     }
 }
