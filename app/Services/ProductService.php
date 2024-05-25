@@ -67,7 +67,7 @@ class ProductService
             'product_code' => $dto->productCode,
             'product_name' => $dto->productName,
             'price' => $dto->price,
-            'quantity' => $dto->quantity,
+            'quantity' => $dto->qty,
             'category_id' => $dto->categoryId
         ];
 

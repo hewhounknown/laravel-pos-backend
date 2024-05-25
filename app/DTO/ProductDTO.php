@@ -9,7 +9,7 @@ class ProductDTO
     public string $productCode;
     public string $productName;
     public float $price;
-    public int $quantity;
+    public int $qty;
     public int $categoryId;
 
     public function __construct($req)
@@ -17,7 +17,7 @@ class ProductDTO
         $this->productCode = $this->generateCode($req->productName);
         $this->productName = Str::lower($req->productName) ;
         $this->price = $req->price;
-        $this->quantity = $req->quantity;
+        $this->qty = $req->qty;
         $this->categoryId = $req->categoryId;
     }
 

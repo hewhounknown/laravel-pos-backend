@@ -8,7 +8,7 @@ class InvoiceItemDTO
 {
     public string $invoiceNo;
     public int $productId;
-    public int $quantity;
+    public int $qty;
     public float $unitPrice;
     public float $totalPrice;
 
@@ -16,16 +16,16 @@ class InvoiceItemDTO
     {
         $this->invoiceNo = $invoice->invoiceNo;
         $this->productId = $item['productId'];
-        $this->quantity = $item['quantity'];
+        $this->qty = $item['qty'];
         $this->unitPrice = $item['productPrice'];
-        $this->totalPrice = $this->calculateTotal($item['productPrice'], $item['quantity']);
+        $this->totalPrice = $this->calculateTotal($item['productPrice'], $item['qty']);
 
         $invoice->subTotal($this->totalPrice);
     }
 
-    private function calculateTotal($price, $quantity) : float
+    private function calculateTotal($price, $qty) : float
     {
-        $total = $price * $quantity;
+        $total = $price * $qty;
         return $total;
     }
 }
