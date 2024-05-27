@@ -4,29 +4,37 @@ namespace App\Services;
 
 use App\DTO\InvoiceDTO;
 use App\Repositories\InvoiceRepository;
+use App\Repositories\ProductRepository;
 use App\Repositories\InvoiceItemRepository;
 
 class InvoiceService
 {
     protected $invoiceRepo;
     protected $itemRepo;
+    protected $productRepo;
 
-    public function __construct(InvoiceRepository $invoRepo, InvoiceItemRepository $itemRepo)
+    public function __construct(InvoiceRepository $invoRepo, InvoiceItemRepository $itemRepo, ProductRepository $proRepo)
     {
         $this->invoiceRepo = $invoRepo;
         $this->itemRepo = $itemRepo;
+        $this->productRepo = $proRepo;
     }
 
     public function create(InvoiceDTO $dto, array $itemList)
     {
-        $arr = $this->toInvoiceArr($dto);
-        $invoice = $this->invoiceRepo->createInvoice($arr);
-
         foreach($itemList as $i)
         {
+            $product = $this->productRepo->getById($i->productId);
+            if($product->quantity <= $i->qty) return "No enought quantity";
+
+            $this->productRepo->decreaseQty($i->productId, $i->qty);
+
             $item = $this->toItemArr($i);
             $items[] = $this->itemRepo->createItem($item);
         }
+
+        $arr = $this->toInvoiceArr($dto);
+        $invoice = $this->invoiceRepo->createInvoice($arr);
 
         $response = [$invoice, $items];
         return $response;

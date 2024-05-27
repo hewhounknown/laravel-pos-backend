@@ -16,7 +16,7 @@ class ProductRepository
         return Product::join('categories', 'categories.id', '=', 'products.category_id')
                         ->where('products.id', $id)
                         ->select('products.*', 'categories.category_code')
-                        ->get();
+                        ->first();
     }
 
     public function create(array $data)
@@ -37,5 +37,10 @@ class ProductRepository
     public function findName($name)
     {
         return Product::where('product_name', $name)->first();
+    }
+
+    public function decreaseQty($id)
+    {
+        return Product::where('id', $id)->decrement('quantity');
     }
 }
