@@ -21,9 +21,9 @@ class InvoiceItemRepository
         return Invoiceitems::create($data);
     }
 
-    public function updateItem($id, array $data)
+    public function updateItem($id, $invoiceNo, array $data)
     {
-        return Invoiceitems::where('id', $id)->update($data);
+        return Invoiceitems::updateOrInsert(['product_id' => $id, 'invoice_number' => $invoiceNo], $data);
     }
 
     public function deleteItem($id)

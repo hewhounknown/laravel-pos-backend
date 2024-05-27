@@ -43,7 +43,15 @@ class InvoiceController extends Controller
 
     public function update($id, Request $req)
     {
-        //
+        $dtoInvoice = new InvoiceDTO($req);
+
+        foreach($req->item as $item){
+            $itemdto = new InvoiceItemDTO($item, $dtoInvoice);
+            $list[] = $itemdto;
+        }
+
+        $invoice = $this->invoiceService->update($id, $dtoInvoice, $list);
+        return response()->json($invoice, 200);
     }
 
     public function destroy($id)

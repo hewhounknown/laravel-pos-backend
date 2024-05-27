@@ -58,6 +58,21 @@ class InvoiceService
     public function update($id, InvoiceDTO $dto, array $itemList)
     {
         $isInvoice = $this->invoiceRepo->getInvoice($id);
+        if($isInvoice == null) return "no data to update";
+
+        foreach($itemList as $i)
+        {
+            $i->invoiceNo = $isInvoice->invoice_number;
+            $item = $this->toItemArr($i);
+            $items[] = $this->itemRepo->updateItem($i->productId, $i->invoiceNo, $item);
+        }
+
+        $dto->invoiceNo = $isInvoice->invoice_number;
+        $arr = $this->toInvoiceArr($dto);
+        $invoice = $this->invoiceRepo->updateInvoice($id, $arr);
+
+        $response = [$invoice, $items];
+        return $response;
     }
 
     public function delete($id)
